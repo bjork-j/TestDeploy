@@ -1,0 +1,151 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.revature</groupId>
+  <artifactId>test</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>test</name>
+  <url>http://maven.apache.org</url>
+
+<build>
+	<plugins>
+		<!-- These lines will set your Java version to 1.8 for you -->
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>3.6.0</version>
+			<configuration>
+				<source>1.8</source>
+				<target>1.8</target>
+					<excludes>
+					<exclude>YOUR_ANGULAR_PROJECT_NAME/**</exclude>
+				</excludes>
+			</configuration>
+		</plugin>
+		<!-- These lines will exclude the the Angular application from compiling during a build. Set the YOUR_ANGULAR_PROJECT_NAME to your Angular project's name -->
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-war-plugin</artifactId>
+			<version>3.2.2</version>
+			<configuration>
+				<excludes>
+					<exclude>YOUR_ANGULAR_PROJECT_NAME/**</exclude>
+				</excludes>
+			</configuration>
+		</plugin>
+		<!-- These lines will automatically install dependencies and perform a build of your Angular projects when the Maven project is built. Like, say, when Jenkins does it's automatic Maven build after a push to GitHub. Set the YOUR_ANGULAR_PROJECT_NAME to your Angular project's name and set the YOUR_MAVEN_PROJECT_NAME to your Maven project's name -->
+		<plugin>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>exec-maven-plugin</artifactId>
+			<version>1.6.0</version>
+			<executions>
+				<execution>
+					<id>exec-npm-install</id>
+					<phase>generate-sources</phase>
+					<configuration>
+						<workingDirectory>${project.basedir}/src/main/YOUR_ANGULAR_PROJECT_NAME</workingDirectory>
+						<executable>npm</executable>
+						<arguments>
+							<argument>install</argument>
+						</arguments>
+					</configuration>
+					<goals>
+						<goal>exec</goal>
+					</goals>
+				</execution>
+				<execution>
+					<id>exec-npm-build</id>
+					<phase>generate-sources</phase>
+					<configuration>
+						<workingDirectory>${project.basedir}/src/main/YOUR_ANGULAR_PROJECT_NAME</workingDirectory>
+						<executable>ng</executable>
+						<arguments>
+							<argument>build</argument>
+							<argument>--baseHref=/YOUR_MAVEN_PROJECT_NAME/ng/</argument>
+						</arguments>
+					</configuration>
+					<goals>
+						<goal>exec</goal>
+					</goals>
+				</execution>
+			</executions>
+		</plugin>
+	</plugins>
+	<!-- These lines will set up maven to peform the actions above -->
+	<pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.m2e</groupId>
+				<artifactId>lifecycle-mapping</artifactId>
+				<version>1.0.0</version>
+				<configuration>
+					<lifecycleMappingMetadata>
+						<pluginExecutions>
+							<pluginExecution>
+								<pluginExecutionFilter>
+									<groupId>
+										org.codehaus.mojo
+									</groupId>
+									<artifactId>
+										exec-maven-plugin
+									</artifactId>
+									<versionRange>
+										[1.6.0,)
+									</versionRange>
+									<goals>
+										<goal>exec</goal>
+									</goals>
+								</pluginExecutionFilter>
+								<action>
+									<ignore></ignore>
+								</action>
+							</pluginExecution>
+						</pluginExecutions>
+					</lifecycleMappingMetadata>
+				</configuration>
+			</plugin>
+		</plugins>
+	</pluginManagement>
+</build>
+<!-- These are the standard dependencies we use for our projects for OJDBC, Jackson for JSON objects, Log4j, and JUnit. Change them as you need them -->
+<dependencies>
+	<dependency>
+		<groupId>com.oracle</groupId>
+		<artifactId>ojdbc7</artifactId>
+		<version>12.1.0</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.tomcat</groupId>
+		<artifactId>tomcat-catalina</artifactId>
+		<version>9.0.14</version>
+	</dependency>
+	<dependency>
+		<groupId>com.fasterxml.jackson.core</groupId>
+		<artifactId>jackson-annotations</artifactId>
+		<version>2.9.8</version>
+	</dependency>
+	<dependency>
+		<groupId>com.fasterxml.jackson.core</groupId>
+		<artifactId>jackson-core</artifactId>
+		<version>2.9.8</version>
+	</dependency>
+	<dependency>
+		<groupId>com.fasterxml.jackson.core</groupId>
+		<artifactId>jackson-databind</artifactId>
+		<version>2.9.8</version>
+	</dependency>
+	<dependency>
+		<groupId>log4j</groupId>
+		<artifactId>log4j</artifactId>
+		<version>1.2.17</version>
+	</dependency>
+	<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<version>4.12</version>
+		<scope>test</scope>
+	</dependency>
+</dependencies>
